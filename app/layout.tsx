@@ -1,6 +1,11 @@
 import type { Metadata, Viewport } from "next";
+import { VT323 } from "next/font/google";
 import "98.css";
 import "./globals.css";
+import "./phone.css";
+
+// Pixel LCD face for the mobile keypad-phone screen.
+const lcdFont = VT323({ weight: "400", subsets: ["latin"], variable: "--font-lcd", display: "swap" });
 
 export const metadata: Metadata = {
   title: "Kanak Agrawal | Portfolio",
@@ -21,7 +26,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="en" className={lcdFont.variable}>
       <body>{children}</body>
     </html>
   );

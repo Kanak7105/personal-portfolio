@@ -7,6 +7,8 @@ export const profile = {
   githubHandle: "Kanak7105",
   linkedin: "https://www.linkedin.com/in/kanak-agrawal-023856295/",
   resume: "/Kanak_Agrawal_Resume.pdf",
+  summary:
+    "Full-stack developer working across Next.js, React, NestJS and MongoDB. I like building systems that are reliable under load and pleasant to use, from access-control frameworks to dashboards and design-system components.",
 };
 
 export const education = {

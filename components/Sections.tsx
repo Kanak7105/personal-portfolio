@@ -78,11 +78,7 @@ function About() {
           <h2 className="text-lg font-bold m-0">{profile.name}</h2>
           <p className="m-0">{profile.role}</p>
           <p className="m-0 text-[#404040]">{profile.location}</p>
-          <p className="mt-2 mb-0">
-            Full-stack developer working across Next.js, React, NestJS and MongoDB. I like
-            building systems that are reliable under load and pleasant to use, from
-            access-control frameworks to dashboards and design-system components.
-          </p>
+          <p className="mt-2 mb-0">{profile.summary}</p>
         </div>
       </div>
 

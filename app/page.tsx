@@ -1,5 +1,5 @@
 import Desktop from "@/components/Desktop";
-import MobileView from "@/components/MobileView";
+import Phone from "@/components/Phone";
 
 export default function Home() {
   return (
@@ -8,7 +8,7 @@ export default function Home() {
         <Desktop />
       </div>
       <div className="md:hidden">
-        <MobileView />
+        <Phone />
       </div>
     </>
   );

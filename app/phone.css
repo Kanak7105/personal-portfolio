@@ -1,0 +1,554 @@
+/* Mobile layout: a 90s keypad phone (components/Phone.tsx). */
+
+.phone-stage {
+  --lcd-bg: #b4cc8c;
+  --lcd-bg-hi: #c6dba0;
+  --lcd-ink: #1c2812;
+  --plastic: #2e3a48;
+  --plastic-hi: #4a5b6e;
+  --plastic-lo: #1a222c;
+  --key: #dfe4ea;
+  --key-lo: #aeb7c2;
+  --key-ink: #1d232b;
+
+  min-height: 100dvh;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 8px 12px;
+  background-color: var(--teal);
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='96' height='96'><g font-family='Courier New,monospace' font-size='14' font-weight='bold' fill='%23007373'><text x='8' y='24'>&lt;/&gt;</text><text x='56' y='72'>{ }</text></g></svg>");
+  background-size: 96px 96px;
+  touch-action: manipulation; /* no double-tap zoom while tapping keys */
+  -webkit-tap-highlight-color: transparent;
+}
+
+.phone {
+  width: min(100%, 400px);
+  height: max(600px, calc(100dvh - 16px));
+  display: flex;
+  flex-direction: column;
+  gap: clamp(8px, 1.6dvh, 14px);
+  padding: 10px clamp(14px, 4.5vw, 22px) 12px;
+  border-radius: 34px 34px 52px 52px;
+  background: linear-gradient(160deg, var(--plastic-hi) 0%, var(--plastic) 35%, var(--plastic-lo) 100%);
+  box-shadow:
+    inset 2px 2px 0 rgba(255, 255, 255, 0.18),
+    inset -2px -3px 0 rgba(0, 0, 0, 0.45),
+    0 12px 28px rgba(0, 0, 0, 0.45);
+}
+
+.phone-top {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  padding-top: 4px;
+}
+.phone-earpiece {
+  width: 64px;
+  height: 7px;
+  border-radius: 4px;
+  background: repeating-linear-gradient(90deg, #0b0f14 0 3px, #26303c 3px 5px);
+  box-shadow: inset 0 1px 2px #000, 0 1px 0 rgba(255, 255, 255, 0.12);
+}
+.phone-brand {
+  font: bold 11px/1 Tahoma, Verdana, sans-serif;
+  letter-spacing: 4px;
+  color: #93a3b5;
+  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.6);
+}
+
+/* ---------- Screen ---------- */
+.phone-bezel {
+  flex: 1;
+  min-height: 0;
+  padding: 10px;
+  border-radius: 14px 14px 26px 26px;
+  background: #11161c;
+  box-shadow: inset 0 2px 6px #000, 0 1px 0 rgba(255, 255, 255, 0.12);
+}
+.lcd {
+  position: relative;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: 4px 8px 2px;
+  border-radius: 6px 6px 16px 16px;
+  background: radial-gradient(ellipse at 40% 30%, var(--lcd-bg-hi), var(--lcd-bg) 70%);
+  color: var(--lcd-ink);
+  font-family: var(--font-lcd), "Courier New", monospace;
+  font-size: 21px;
+  line-height: 1.1;
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.3), inset 0 3px 10px rgba(0, 0, 0, 0.35);
+  overflow: hidden;
+}
+.lcd::after {
+  /* faint pixel grid */
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(rgba(0, 0, 0, 0.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 0, 0, 0.045) 1px, transparent 1px);
+  background-size: 3px 3px;
+}
+.lcd ::selection {
+  background: var(--lcd-ink);
+  color: var(--lcd-bg);
+}
+
+.lcd-status {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  height: 20px;
+  font-size: 18px;
+}
+.lcd-signal {
+  display: inline-flex;
+  align-items: flex-end;
+  gap: 2px;
+}
+.lcd-signal i {
+  width: 3px;
+  background: var(--lcd-ink);
+}
+.lcd-battery {
+  position: relative;
+  display: inline-flex;
+  gap: 1px;
+  padding: 1px;
+  margin-right: 3px;
+  border: 1.5px solid var(--lcd-ink);
+  height: 11px;
+}
+.lcd-battery::after {
+  content: "";
+  position: absolute;
+  right: -4px;
+  top: 2px;
+  width: 2px;
+  height: 4px;
+  background: var(--lcd-ink);
+}
+.lcd-battery i {
+  width: 4px;
+  background: var(--lcd-ink);
+}
+
+.lcd-screen {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+.lcd-title {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  margin: 3px 0 4px;
+  padding: 1px 6px;
+  background: var(--lcd-ink);
+  color: var(--lcd-bg);
+  white-space: nowrap;
+}
+.lcd-title span:first-child {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.lcd-body-wrap {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+}
+.lcd-body {
+  height: 100%;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: none;
+  padding-right: 10px;
+}
+.lcd-body::-webkit-scrollbar {
+  display: none;
+}
+.lcd-scrollbar {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 1px;
+  width: 4px;
+  border-left: 1px dotted var(--lcd-ink);
+}
+.lcd-scrollbar i {
+  position: absolute;
+  left: -1px;
+  width: 5px;
+  background: var(--lcd-ink);
+}
+
+.lcd-menu {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.lcd .lcd-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  min-width: 0;
+  min-height: 34px;
+  padding: 2px 6px 2px 2px;
+  border: 0;
+  border-radius: 0;
+  background: none;
+  box-shadow: none;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  text-decoration: none;
+  cursor: pointer;
+}
+.lcd .lcd-item:focus {
+  outline: none;
+}
+.lcd .lcd-item:active {
+  /* beat 98.css's pressed-button padding/shadow shift */
+  padding: 2px 6px 2px 2px;
+  box-shadow: none;
+}
+.lcd .lcd-item:focus-visible {
+  outline: 1px dashed var(--lcd-ink);
+  outline-offset: -1px;
+}
+.lcd .lcd-item[aria-current="true"] {
+  background: var(--lcd-ink);
+  color: var(--lcd-bg);
+}
+.lcd-num {
+  flex: none;
+  width: 20px;
+  height: 20px;
+  display: grid;
+  place-items: center;
+  border: 1px solid currentColor;
+  font-size: 18px;
+}
+.lcd-label {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+.lcd-label small {
+  font-size: 17px;
+  opacity: 0.75;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.lcd-ext {
+  font-family: Tahoma, sans-serif;
+  font-size: 13px;
+}
+
+.lcd-text {
+  padding: 2px 2px 8px;
+}
+.lcd-text h3 {
+  margin: 6px 0 2px;
+  font-size: 23px;
+  font-weight: normal;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.lcd-text h3:first-child {
+  margin-top: 0;
+}
+.lcd-text p {
+  margin: 0 0 6px;
+}
+.lcd-text .lcd-dim {
+  opacity: 0.7;
+}
+.lcd-text u {
+  text-underline-offset: 2px;
+}
+.lcd-li {
+  display: flex;
+  gap: 6px;
+}
+.lcd-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+.lcd-tags span {
+  padding: 0 4px;
+  border: 1px solid var(--lcd-ink);
+  font-size: 18px;
+}
+
+.lcd-home {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  text-align: center;
+}
+.lcd-operator {
+  font-size: 22px;
+  letter-spacing: 1px;
+}
+.lcd-clock {
+  font-size: clamp(48px, 9dvh, 84px);
+  line-height: 0.9;
+  margin-top: 4px;
+}
+.lcd-date {
+  font-size: 20px;
+}
+.lcd-role {
+  max-width: 26ch;
+  margin-top: 10px;
+  font-size: 19px;
+}
+.lcd-hint {
+  margin-top: 10px;
+  font-size: 17px;
+  opacity: 0.7;
+}
+@media (max-height: 720px) {
+  .lcd-role { margin-top: 6px; }
+  .lcd-hint { display: none; }
+}
+.lcd-home {
+  overflow: hidden;
+}
+
+.lcd-boot {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+.lcd-boot-logo {
+  font-size: 46px;
+  letter-spacing: 6px;
+  animation: lcd-fade 0.6s steps(4) both;
+}
+.lcd-boot-bar {
+  width: 60%;
+  height: 8px;
+  border: 1px solid var(--lcd-ink);
+  padding: 1px;
+}
+.lcd-boot-bar i {
+  display: block;
+  height: 100%;
+  background: var(--lcd-ink);
+  animation: lcd-load 1.4s steps(10) both;
+}
+@keyframes lcd-fade {
+  from { opacity: 0; }
+}
+@keyframes lcd-load {
+  from { width: 0; }
+  to { width: 100%; }
+}
+
+.lcd-toast {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 1;
+  transform: translate(-50%, -50%);
+  max-width: 85%;
+  padding: 8px 14px;
+  border: 2px solid var(--lcd-ink);
+  outline: 2px solid var(--lcd-bg);
+  background: var(--lcd-bg);
+  text-align: center;
+  overflow-wrap: anywhere;
+}
+
+.lcd-soft {
+  display: flex;
+  justify-content: space-between;
+  padding: 2px 2px 0;
+  border-top: 1px solid rgba(28, 40, 18, 0.35);
+}
+
+/* ---------- Keys ---------- */
+.phone button.pkey,
+.phone button.nav {
+  min-width: 0;
+  min-height: 0;
+  padding: 0;
+  border: 0;
+  font-family: Tahoma, Verdana, sans-serif;
+  cursor: pointer;
+  -webkit-user-select: none;
+  user-select: none;
+}
+.phone button.pkey:focus,
+.phone button.nav:focus {
+  outline: none;
+}
+.phone button.pkey:focus-visible,
+.phone button.nav:focus-visible {
+  outline: 2px solid #ffd84a;
+  outline-offset: 1px;
+}
+
+.phone-controls {
+  --nav: clamp(84px, 13.5dvh, 112px);
+  display: grid;
+  grid-template-columns: 1fr var(--nav) 1fr;
+  grid-template-rows: 1fr 1fr;
+  column-gap: 14px;
+  row-gap: 8px;
+  height: var(--nav);
+  align-items: center;
+}
+.phone button.soft {
+  height: 26px;
+  background: linear-gradient(var(--key), var(--key-lo));
+  box-shadow: 0 2px 0 #0d1117, inset 0 1px 0 #fff;
+}
+.phone button.soft-l {
+  grid-area: 1 / 1;
+  border-radius: 6px 6px 6px 16px;
+}
+.phone button.soft-r {
+  grid-area: 1 / 3;
+  border-radius: 6px 6px 16px 6px;
+}
+.phone button.call,
+.phone button.end {
+  height: 30px;
+  display: grid;
+  place-items: center;
+  color: #fff;
+  box-shadow: 0 2px 0 #0d1117, inset 0 1px 0 rgba(255, 255, 255, 0.45);
+}
+.phone button.call {
+  grid-area: 2 / 1;
+  border-radius: 8px 16px 8px 18px;
+  background: linear-gradient(#4fbf5c, #2d8a3a);
+}
+.phone button.end {
+  grid-area: 2 / 3;
+  border-radius: 16px 8px 18px 8px;
+  background: linear-gradient(#e2574c, #a8302a);
+}
+.phone button.pkey:active {
+  transform: translateY(2px);
+  box-shadow: 0 0 0 #0d1117, inset 0 1px 3px rgba(0, 0, 0, 0.35);
+  filter: brightness(0.92);
+}
+
+.nav-pad {
+  grid-area: 1 / 2 / 3 / 3;
+  position: relative;
+  width: var(--nav);
+  height: var(--nav);
+  border-radius: 50%;
+  background: linear-gradient(160deg, var(--key), var(--key-lo));
+  box-shadow: 0 3px 0 #0d1117, inset 0 2px 0 #fff, inset 0 -2px 3px rgba(0, 0, 0, 0.2);
+}
+.phone button.nav {
+  position: absolute;
+  display: grid;
+  place-items: center;
+  background: transparent;
+  box-shadow: none;
+  color: #5b6672;
+  font-size: 11px;
+  border-radius: 50%;
+}
+.phone button.nav:active {
+  color: var(--key-ink);
+  background: rgba(0, 0, 0, 0.08);
+}
+.phone button.nav.up,
+.phone button.nav.down {
+  left: 30%;
+  width: 40%;
+  height: 32%;
+}
+.phone button.nav.up { top: 0; }
+.phone button.nav.down { bottom: 0; }
+.phone button.nav.left,
+.phone button.nav.right {
+  top: 30%;
+  width: 32%;
+  height: 40%;
+}
+.phone button.nav.left { left: 0; }
+.phone button.nav.right { right: 0; }
+.phone button.nav.ok {
+  inset: 31%;
+  background: linear-gradient(160deg, #f2f5f8, #c4ccd5);
+  box-shadow: 0 2px 0 #7d8894, inset 0 1px 0 #fff;
+  color: var(--key-ink);
+  font-size: 12px;
+  font-weight: bold;
+}
+.phone button.nav.ok:active {
+  transform: translateY(1px);
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+.phone-keypad {
+  --k: clamp(36px, 6dvh, 50px);
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-auto-rows: var(--k);
+  gap: clamp(6px, 1.1dvh, 10px) clamp(10px, 4vw, 18px);
+}
+.phone button.digit {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  border-radius: 14px / 50%;
+  background: linear-gradient(var(--key), var(--key-lo));
+  box-shadow: 0 3px 0 #0d1117, inset 0 1px 0 #fff;
+  color: var(--key-ink);
+}
+.phone button.digit b {
+  font-size: 20px;
+}
+.phone button.digit small {
+  min-width: 2.4em;
+  text-align: left;
+  font-size: 10px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: #4d5a68;
+}
+
+.phone-mic {
+  align-self: center;
+  width: 5px;
+  height: 5px;
+  margin-top: auto;
+  border-radius: 50%;
+  background: #0b0f14;
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.15);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lcd-boot-logo,
+  .lcd-boot-bar i {
+    animation: none;
+  }
+}

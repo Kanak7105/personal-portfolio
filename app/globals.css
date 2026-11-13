@@ -24,13 +24,25 @@ body {
   background: var(--teal);
 }
 
+/* Readable content font: the bitmap pixel font stays on chrome (title bars, buttons,
+   taskbar, start menu), while text inside windows uses Tahoma, the classic Windows UI face. */
+.window-body,
+.window-body label,
+.window-body legend,
+.window-body table,
+.window-body li {
+  font-family: Tahoma, Verdana, "Segoe UI", sans-serif;
+  font-size: 13px;
+  -webkit-font-smoothing: auto;
+}
+
 /* Preflight strips list bullets; bring them back inside window content. */
 .window-body ul:not(.tree-view):not(.list-none):not(.tree-view ul) {
   list-style: square;
 }
 .window-body p,
 .window-body li {
-  line-height: 1.45;
+  line-height: 1.55;
 }
 
 .sunken-box {
