@@ -1,0 +1,251 @@
+@import "tailwindcss";
+
+/* 98.css is unlayered, so it wins over Tailwind's preflight (which lives in @layer base).
+   Everything below is also unlayered and loaded after 98.css. */
+
+:root {
+  --teal: #008080;
+  --silver: #c0c0c0;
+  --navy: #000080;
+  --raised: inset -1px -1px #0a0a0a, inset 1px 1px #fff, inset -2px -2px #808080, inset 2px 2px #dfdfdf;
+  --pressed: inset -1px -1px #fff, inset 1px 1px #0a0a0a, inset -2px -2px #dfdfdf, inset 2px 2px #808080;
+}
+
+html,
+body {
+  background: var(--teal);
+  color: #000;
+  font-family: "Pixelated MS Sans Serif", Arial, sans-serif;
+  font-size: 12px;
+  -webkit-font-smoothing: none;
+}
+
+.desktop {
+  background: var(--teal);
+}
+
+/* Preflight strips list bullets; bring them back inside window content. */
+.window-body ul:not(.tree-view):not(.list-none):not(.tree-view ul) {
+  list-style: square;
+}
+.window-body p,
+.window-body li {
+  line-height: 1.45;
+}
+
+.sunken-box {
+  box-shadow: inset -1px -1px #fff, inset 1px 1px #808080, inset -2px -2px #dfdfdf, inset 2px 2px #0a0a0a;
+  padding: 2px;
+}
+.sunken-tray {
+  box-shadow: inset -1px -1px #fff, inset 1px 1px #808080;
+}
+
+.tag {
+  background: #fff;
+  box-shadow: inset -1px -1px #dfdfdf, inset 1px 1px #808080;
+  padding: 1px 5px;
+}
+
+/* An <a> that looks like a 98.css button */
+.link-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  min-height: 23px;
+  min-width: 75px;
+  justify-content: center;
+  padding: 0 12px;
+  background: var(--silver);
+  box-shadow: var(--raised);
+  color: #000;
+  text-decoration: none;
+}
+.link-btn:active {
+  box-shadow: var(--pressed);
+  padding: 2px 11px 0 13px;
+}
+.link-btn:focus-visible {
+  outline: 1px dotted #000;
+  outline-offset: -4px;
+}
+
+/* ---------- Desktop icons ---------- */
+button.desktop-icon {
+  width: 96px;
+  min-width: 0;
+  min-height: 0;
+  padding: 2px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  background: none;
+  box-shadow: none;
+  color: #fff;
+  cursor: default;
+}
+button.desktop-icon:not(:disabled):active {
+  box-shadow: none;
+  padding: 2px;
+}
+button.desktop-icon:focus {
+  outline: none;
+}
+.desktop-icon .icon-img {
+  position: relative;
+  display: block;
+}
+.desktop-icon .icon-label {
+  padding: 1px 2px;
+  text-align: center;
+  line-height: 1.2;
+  font-size: 13px;
+  text-shadow: 1px 1px #000;
+  border: 1px dotted transparent;
+}
+.desktop-icon.selected .icon-img::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--navy);
+  opacity: 0.5;
+}
+.desktop-icon.selected .icon-label {
+  background: var(--navy);
+  text-shadow: none;
+}
+.desktop-icon:focus-visible .icon-label {
+  border-color: #ff0;
+}
+
+/* ---------- Taskbar ---------- */
+.taskbar {
+  background: var(--silver);
+  box-shadow: inset 0 1px #dfdfdf, inset 0 2px #fff;
+  padding-top: 2px;
+}
+.taskbar button.start-button,
+.taskbar button.task-button {
+  min-width: 0;
+  min-height: 0;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.taskbar button.start-button {
+  padding: 0 5px 0 3px;
+}
+.taskbar button.task-button {
+  width: 160px;
+  flex-shrink: 1;
+  min-width: 40px;
+  padding: 0 6px;
+  justify-content: flex-start;
+}
+.taskbar button.pressed,
+.taskbar button.pressed:not(:disabled):active {
+  box-shadow: var(--pressed);
+}
+.taskbar button.task-button.pressed {
+  font-weight: bold;
+  background-image: repeating-conic-gradient(#fff 0% 25%, var(--silver) 0% 50%);
+  background-size: 2px 2px;
+}
+.taskbar-divider {
+  width: 2px;
+  height: 20px;
+  box-shadow: inset 1px 0 #808080, inset -1px 0 #fff;
+}
+
+/* ---------- Start menu ---------- */
+.start-menu {
+  background: var(--silver);
+  box-shadow: var(--raised);
+  padding: 3px;
+}
+.start-banner {
+  width: 24px;
+  background: linear-gradient(to top, var(--navy), #1084d0);
+  color: #c0c0c0;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding-bottom: 6px;
+}
+.start-banner span {
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  font-size: 16px;
+  letter-spacing: 1px;
+}
+.start-banner b {
+  color: #fff;
+}
+.start-item,
+button.start-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  height: 34px;
+  min-height: 0;
+  padding: 0 24px 0 6px;
+  background: none;
+  box-shadow: none;
+  color: #000;
+  text-decoration: none;
+  text-align: left;
+  font-size: 12px;
+}
+button.start-item:not(:disabled):active {
+  box-shadow: none;
+  padding: 0 24px 0 6px;
+}
+.start-item:hover,
+.start-item:focus-visible {
+  background: var(--navy);
+  color: #fff;
+  outline: none;
+}
+.start-sep {
+  margin: 2px 2px;
+  height: 2px;
+  box-shadow: inset 0 1px #808080, inset 0 -1px #fff;
+}
+
+/* Preflight sets border-width: 0, which hides 98.css's border-image groove. */
+fieldset {
+  border-width: 2px;
+  border-style: solid;
+}
+
+/* ---------- Wallpaper ---------- */
+.wallpaper {
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='96' height='96'><g font-family='Courier New,monospace' font-size='14' font-weight='bold' fill='%23007373'><text x='8' y='24'>&lt;/&gt;</text><text x='56' y='72'>{ }</text></g></svg>");
+  background-size: 96px 96px;
+}
+.wp-name {
+  margin: 14px 0 0;
+  font-size: 22px;
+  font-weight: bold;
+  color: #fff;
+  text-shadow: 2px 2px #004040;
+  letter-spacing: 1px;
+}
+.wp-role {
+  margin: 4px 0 0;
+  font-size: 13px;
+  color: #b8f0f0;
+  text-shadow: 1px 1px #004040;
+}
+.wp-cursor {
+  animation: wp-blink 1s steps(1) infinite;
+}
+@keyframes wp-blink {
+  50% { opacity: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .wp-cursor { animation: none; }
+}
